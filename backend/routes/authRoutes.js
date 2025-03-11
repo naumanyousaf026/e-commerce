@@ -265,6 +265,16 @@ router.get('/profile', verifyToken, async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
+
+// Get all users route
+router.get('/users', verifyToken, async (req, res) => {
+  try {
+    const users = await User.find().select('name email phone role createdAt'); // Select only the fields you need
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
 router.get('/verify', verifyToken, (req, res) => {
   res.status(200).json({ valid: true });
 });
