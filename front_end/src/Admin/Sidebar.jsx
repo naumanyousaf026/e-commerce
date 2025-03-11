@@ -1,10 +1,16 @@
-import { FaUserCircle } from "react-icons/fa";
-import { CiGrid41 } from "react-icons/ci";
-import { FaWhatsapp } from 'react-icons/fa';
-import { FaRegUser } from "react-icons/fa";
-import { TbSettings2 } from "react-icons/tb";
-import { FiLogOut } from "react-icons/fi";
-import { FaMoon, FaSun } from "react-icons/fa";
+import { BsShopWindow } from "react-icons/bs";  // Store icon
+import { MdOutlineSpaceDashboard } from "react-icons/md";  // Dashboard icon
+import { BiPackage } from "react-icons/bi";  // Products icon
+import { BiCategoryAlt } from "react-icons/bi";  // Categories icon
+import { RiShoppingCart2Line } from "react-icons/ri";  // Orders icon
+import { RiUserSearchLine } from "react-icons/ri";  // Customers icon
+import { RiCoupon3Line } from "react-icons/ri";  // Promotions icon
+import { BiBarChartAlt2 } from "react-icons/bi";  // Analytics icon
+import { RiMoneyDollarCircleLine } from "react-icons/ri";  // Payments icon
+import { IoNotificationsOutline } from "react-icons/io5";  // Notifications icon
+import { RiSettings4Line } from "react-icons/ri";  // Settings icon
+import { FaMoon, FaSun } from "react-icons/fa";  // Dark/Light mode icons
+import { RiLogoutCircleRLine } from "react-icons/ri";  // Logout icon
 
 const Sidebar = ({ darkMode, toggleDarkMode, setSection }) => {
   return (
@@ -18,35 +24,83 @@ const Sidebar = ({ darkMode, toggleDarkMode, setSection }) => {
         transformStyle: "preserve-3d",
       }}
     >
-      {/* Sidebar Icons */}
-      <FaUserCircle
-        className="text-4xl text-gray-600 cursor-pointer transform transition-transform duration-300 hover:rotate-12"
+      {/* Store Logo */}
+      <BsShopWindow
+        className={`text-4xl ${darkMode ? "text-blue-400" : "text-blue-600"} cursor-pointer transform transition-transform duration-300 hover:rotate-12`}
+        onClick={() => setSection('store')}
+      />
+      
+      {/* Dashboard */}
+      <MdOutlineSpaceDashboard
+        className={`text-3xl ${darkMode ? "text-gray-300" : "text-gray-600"} cursor-pointer transform transition-transform duration-300 hover:rotate-12`}
         onClick={() => setSection('dashboard')}
       />
-      <CiGrid41
-        className="text-3xl text-gray-500 cursor-pointer transform transition-transform duration-300 hover:rotate-12"
-        onClick={() => setSection('dashboard')}
+      
+      {/* Products/Inventory Management */}
+      <BiPackage
+        className={`text-3xl ${darkMode ? "text-gray-300" : "text-gray-600"} cursor-pointer transform transition-transform duration-300 hover:rotate-12`}
+        onClick={() => setSection('adminAddProduct')}
       />
-      <FaWhatsapp
-        className="text-3xl text-gray-500 cursor-pointer transform transition-transform duration-300 hover:rotate-12"
-        onClick={() => setSection('account')}
+      
+      {/* Categories Management */}
+      <BiCategoryAlt
+        className={`text-3xl ${darkMode ? "text-gray-300" : "text-gray-600"} cursor-pointer transform transition-transform duration-300 hover:rotate-12`}
+        onClick={() => setSection('categories')}
       />
-      <FaRegUser
-        className="text-3xl text-gray-500 cursor-pointer transform transition-transform duration-300 hover:rotate-12"
-        onClick={() => setSection('user')}
+      
+      {/* Orders Management */}
+      <RiShoppingCart2Line
+        className={`text-3xl ${darkMode ? "text-gray-300" : "text-gray-600"} cursor-pointer transform transition-transform duration-300 hover:rotate-12`}
+        onClick={() => setSection('orders')}
       />
-      <TbSettings2
-        className="text-3xl text-gray-500 cursor-pointer transform transition-transform duration-300 hover:rotate-12"
-        onClick={() => setSection('setting')}
+      
+      {/* Customer Management */}
+      <RiUserSearchLine
+        className={`text-3xl ${darkMode ? "text-gray-300" : "text-gray-600"} cursor-pointer transform transition-transform duration-300 hover:rotate-12`}
+        onClick={() => setSection('customers')}
       />
+      
+      {/* Promotions/Discounts Management */}
+      <RiCoupon3Line
+        className={`text-3xl ${darkMode ? "text-gray-300" : "text-gray-600"} cursor-pointer transform transition-transform duration-300 hover:rotate-12`}
+        onClick={() => setSection('promotions')}
+      />
+      
+      {/* Analytics/Reports */}
+      <BiBarChartAlt2
+        className={`text-3xl ${darkMode ? "text-gray-300" : "text-gray-600"} cursor-pointer transform transition-transform duration-300 hover:rotate-12`}
+        onClick={() => setSection('analytics')}
+      />
+      
+      {/* Payments */}
+      <RiMoneyDollarCircleLine
+        className={`text-3xl ${darkMode ? "text-gray-300" : "text-gray-600"} cursor-pointer transform transition-transform duration-300 hover:rotate-12`}
+        onClick={() => setSection('payments')}
+      />
+      
+      {/* Notifications */}
+      <IoNotificationsOutline
+        className={`text-3xl ${darkMode ? "text-gray-300" : "text-gray-600"} cursor-pointer transform transition-transform duration-300 hover:rotate-12`}
+        onClick={() => setSection('notifications')}
+      />
+      
+      {/* Settings */}
+      <RiSettings4Line
+        className={`text-3xl ${darkMode ? "text-gray-300" : "text-gray-600"} cursor-pointer transform transition-transform duration-300 hover:rotate-12`}
+        onClick={() => setSection('settings')}
+      />
+      
+      {/* Dark/Light Mode Toggle */}
       <button
         onClick={toggleDarkMode}
         className="text-3xl transform transition-transform duration-300 hover:scale-125"
       >
         {darkMode ? <FaSun className="text-yellow-400" /> : <FaMoon className="text-gray-400" />}
       </button>
-      <FiLogOut
-        className="text-3xl text-gray-500 cursor-pointer transform transition-transform duration-300 hover:rotate-12"
+      
+      {/* Logout */}
+      <RiLogoutCircleRLine
+        className={`text-3xl ${darkMode ? "text-gray-300" : "text-gray-600"} cursor-pointer transform transition-transform duration-300 hover:rotate-12 mt-auto`}
         onClick={() => setSection('logout')}
       />
     </aside>

@@ -9,6 +9,7 @@ import cosmatic_4 from "../../images/cosmatic_4.jpg";
 import boyImage from '../../images/aboutUsImages/b1.jpg';
 import girlImage from '../../images/aboutUsImages/g1.jpg';
 import girlImage2 from '../../images/aboutUsImages/g2.jpg';
+import SmallHeader from "../home/SmallHeader.jsx";
 import Footer from "./Footer.jsx";
 // Enhanced Carousel component with indicators and controls
 const Carousel = () => {
@@ -128,18 +129,7 @@ const App = () => {
   return (
     <div className="bg-gradient-to-b from-pink-50 to-white">
       {/* Header - KEPT ORIGINAL */}
-      <header className="w-full bg-gray-100 my-4 py-3">
-        <div className="max-w-screen-xl mx-auto px-4 flex justify-between items-center">
-          <span className="font-bold">ABOUT US</span>
-          <div className="text-right">
-            <a href="home.html" className="mr-1 hover:underline">
-              HOME/
-            </a>
-            <span className="font-bold">ABOUT US</span>
-          </div>
-        </div>
-      </header>
-
+      <SmallHeader pageTitle="AboutUs" />
       {/* Hero Section with improved text overlay */}
       <section className="relative">
         <img

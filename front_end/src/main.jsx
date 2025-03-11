@@ -26,6 +26,8 @@ import ProtectedRoute from "./Admin/ProtectedRoute.jsx";
 import CartPage from './components/Cart/CartPage.jsx';
 import CheckoutPage from './components/Cart/CheckoutPage.jsx';
 import UserProfile from './components/UserProfile/UserProfile.jsx';
+import UserDetail from './Admin/UserDetailsPage.jsx';
+import  OrdersDetail from './Admin/OrdersDetails.jsx'
 const router = createBrowserRouter([
   { path: '/login', element: <Login /> },
   { path: '/signup', element: <Signup /> },
@@ -64,6 +66,8 @@ const router = createBrowserRouter([
       { path: '/Checkout', element: <CheckoutPage/> },
       { path: '/UserProfile', element: <UserProfile/> },
       { path: '/adminAddProduct', element: <AdminAddProduct /> },
+      { path: '/UserDetail', element: <UserDetail/> },
+      { path: '/OrdersDetail', element: <OrdersDetail/> },
     ],
   },
 ]);
