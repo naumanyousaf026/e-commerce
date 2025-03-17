@@ -1,7 +1,7 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const Admin = require("../Models/Admin"); // Import Admin model
+const Admin = require("../models/admin"); // Import Admin model
 const { sendOTPViaEmail } = require("../utils/otpService"); // Import OTP service
 require("dotenv").config();
 

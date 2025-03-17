@@ -12,7 +12,7 @@ import ForgetPassword from './auth/ForgotPassword.jsx';
 import ChangePassword from './auth/ChangePassword.jsx';
 import AdminLogin from "./Admin/AdminLogin.jsx";
 import Admin from "./Admin/Admin.jsx";
-import AboutUs from './components/home/AboutUs.jsx';
+import AboutUs from './components/home/aboutUs.jsx';
 import ContactUs from './components/home/ContactUs.jsx';
 import BestProduct from './components/product/BestProduct.jsx';
 import Cosmetics from './components/product/Cosmetics.jsx';

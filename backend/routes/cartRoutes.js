@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const Cart = require('../Models/Cart');
-const Product = require('../Models/Product'); // Adjust path if needed
+const Cart = require('../models/Cart');
+const Product = require('../models/Product'); // Adjust path if needed
 
 const { verifyToken } = require('../middleware/authMiddleware'); // Import the middleware
 
