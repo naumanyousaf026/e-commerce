@@ -9,7 +9,7 @@ const productSchema = new mongoose.Schema({
   category: { 
     type: String, 
     required: true, 
-    enum: ["product", "beautyWorld", "offerCollection", "cosmetics", "bestProduct", "megaCollection"] 
+    enum: ["product", "beautyWorld", "offerCollection", "cosmetics", "bestProduct", "megaCollection","Skincare","Haircare","Fragrence"] 
   }, // Ensure 'category' is defined and required
   rating: { type: Number, min: 1, max: 5 }, // Added rating field
   discount: { type: Number, default: null } // Added discount field

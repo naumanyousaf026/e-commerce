@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import Sidebar from './Sidebar';
 // import AdminHeader from './AdminHeader';
 import Dashboard from './Dashboard';
+import AdminAddProduct from '../components/home/AdminAddProduct';
+import OrdersDetailsPage from './OrdersDetails';
+import UserDetailsPage from './UserDetailsPage';
 // import User from './User';
 // import TeamList from './TeamList';
 // import SettingsPage from './Setting';
@@ -35,9 +38,9 @@ const Layout = () => {
         <div className="p-6">
           {/* Conditional rendering of sections */}
           {section === 'dashboard' && <Dashboard />}
-          {/* {section === 'user' && <User />} */}
-          {/* {section === 'setting' && <SettingsPage /> }  */}
-          {/* {section === 'account' && <TeamList /> } */}
+          {section === 'adminAddProduct' && <AdminAddProduct />}
+          {section === 'orders' && <OrdersDetailsPage /> } 
+          {section === 'customers' && <UserDetailsPage/> }
           {/* {section === 'Merchant' && <MerchantDetails />}
          */}
         </div>

@@ -207,6 +207,9 @@ const AdminAddProduct = () => {
               <option value="cosmetics">Cosmetics</option>
               <option value="bestProduct">Best Product</option>
               <option value="megaCollection">Mega Collection</option>
+              <option value="Skincare">Product of Skincare</option>
+              <option value="Haircare">Product of Haircare</option>
+              <option value="Fragrence">Product of Fragrence</option>
             </select>
           </div>
           

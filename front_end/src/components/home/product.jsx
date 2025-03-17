@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { FaHome, FaList, FaDollarSign, FaTags, FaFilter, FaSort, FaChevronDown } from "react-icons/fa";
 import Footer from "./Footer.jsx";
 import { useParams } from "react-router-dom";
-
+import SmallHeader from './SmallHeader.jsx';
 import { Link } from "react-router-dom";
 // Define API base URL
 const API_BASE_URL = 'http://localhost:5000';
@@ -76,7 +76,7 @@ const ProductCard = ({ id, image, title, price, rating, discount }) => {
   );
 };
 
-const App = () => {
+const  Product= () => {
   // State for active filters
   const [activeCategory, setActiveCategory] = useState("All");
   const [activePriceRange, setActivePriceRange] = useState("All");
@@ -148,22 +148,12 @@ const App = () => {
         {/* Main Content */}
         <div className="flex-1">
           {/* Header */}
-          <header className="sticky top-0 z-20 bg-white shadow-md p-4 flex justify-between items-center">
-            <div className="flex items-center">
-              <span className="font-bold text-xl text-indigo-600">MEGA COLLECTION</span>
-            </div>
-            <div className="flex items-center space-x-4">
-              <a href="/" className="text-indigo-600 hover:text-indigo-800 transition">
-                <FaHome className="text-xl" />
-              </a>
-              <a href="/bestProduct" className="hover:underline text-indigo-600">BEST PRODUCTS</a>
-              <a href="/offerCollection" className="hover:underline text-indigo-600">OFFERS</a>
-              <a href="/megaCollection" className="hover:underline text-indigo-600 font-bold">MEGA COLLECTION</a>
-            </div>
-          </header>
+          <div className="w-full">
+      <SmallHeader pageTitle="Products" />
+      </div>
 
           {/* Main Content */}
-          <main className="p-6">
+          <main className="p-3">
             {/* Banner with overlay text */}
             <div className="relative mb-8 rounded-lg overflow-hidden shadow-lg">
               <img 
@@ -172,7 +162,7 @@ const App = () => {
                 className="w-full h-64 object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-r from-purple-900/70 to-transparent flex flex-col justify-center p-8">
-                <h1 className="text-white text-4xl font-bold mb-2">Beauty Collection</h1>
+                <h1 className="text-white text-4xl font-bold mb-2">Product Collection</h1>
                 <p className="text-white text-lg max-w-md">Discover our premium selection of beauty products for your daily skincare routine.</p>
                 <button className="bg-yellow-400 hover:bg-yellow-500 text-indigo-900 font-bold px-6 py-2 rounded-full mt-4 self-start transition transform hover:scale-105">
                   Shop Now
@@ -473,4 +463,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default Product;

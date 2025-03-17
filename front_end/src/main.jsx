@@ -14,7 +14,6 @@ import AdminLogin from "./Admin/AdminLogin.jsx";
 import Admin from "./Admin/Admin.jsx";
 import AboutUs from './components/home/AboutUs.jsx';
 import ContactUs from './components/home/ContactUs.jsx';
-import Product from './components/home/Product.jsx';
 import BestProduct from './components/product/BestProduct.jsx';
 import Cosmetics from './components/product/Cosmetics.jsx';
 import BeautyWorld from './components/product/BeautyWorld.jsx';
@@ -28,6 +27,11 @@ import CheckoutPage from './components/Cart/CheckoutPage.jsx';
 import UserProfile from './components/UserProfile/UserProfile.jsx';
 import UserDetail from './Admin/UserDetailsPage.jsx';
 import  OrdersDetail from './Admin/OrdersDetails.jsx'
+import BlogPage from './components/Blog/BlogPage.jsx';
+import Product from './components/home/product.jsx';
+import SkincareProducts from './components/product/SkincareProducts.jsx';
+import FragranceProducts from './components/product/FragranceProducts.jsx';
+import HairCare from './components/product/HairCare.jsx';
 const router = createBrowserRouter([
   { path: '/login', element: <Login /> },
   { path: '/signup', element: <Signup /> },
@@ -55,6 +59,7 @@ const router = createBrowserRouter([
       { path: '/', element: <App /> },
       { path: '/aboutUs', element: <AboutUs /> },
       { path: '/contactUs', element: <ContactUs /> },
+      { path: '/Blog', element: <BlogPage /> }, 
       { path: '/product', element: <Product /> },
       { path: '/product/:id', element: <ProductDetail /> },
       { path: '/bestProduct', element: <BestProduct /> },
@@ -62,12 +67,15 @@ const router = createBrowserRouter([
       { path: '/beautyWorld', element: <BeautyWorld /> },
       { path: '/offerCollection', element: <OfferCollection /> },
       { path: '/megaCollection', element: <MegaCollection /> },
+      {path :'/skincare' ,  element : <SkincareProducts /> },
+      {path :'/FragranceProducts' ,  element : <FragranceProducts /> },
       { path: '/Cart', element: < CartPage/> },
       { path: '/Checkout', element: <CheckoutPage/> },
       { path: '/UserProfile', element: <UserProfile/> },
       { path: '/adminAddProduct', element: <AdminAddProduct /> },
       { path: '/UserDetail', element: <UserDetail/> },
       { path: '/OrdersDetail', element: <OrdersDetail/> },
+      { path: '/HairCare', element: <HairCare/> },
     ],
   },
 ]);
