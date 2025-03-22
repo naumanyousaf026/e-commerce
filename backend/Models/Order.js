@@ -4,14 +4,14 @@ const OrderSchema = new mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User", // Reference to the User model
+      ref: "User ",
       required: true,
     },
     products: [
       {
         product: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "Product", // Reference to the Product model
+          ref: "Product",
           required: true,
         },
         quantity: {
@@ -32,7 +32,7 @@ const OrderSchema = new mongoose.Schema(
     },
     paymentMethod: {
       type: String,
-      enum: ["Cash on Delivery", "Credit Card", "PayPal"],
+      enum: ["Cash on Delivery", "JazzCash", "EasyPaisa"],
       required: true,
     },
     address: {
@@ -41,7 +41,16 @@ const OrderSchema = new mongoose.Schema(
     },
     phoneNumber: {
       type: String,
-      required: true, // Ensure phone number is provided
+      required: true,
+    },
+    transactionId: {
+      type: String, // Store the transaction ID from the payment gateway
+    },
+    paymentStatus: {
+      type: String, // Store the payment status (e.g., "Success", "Failed")
+    },
+    accountNumber: {
+      type: String, // Store account number for JazzCash or EasyPaisa
     },
   },
   { timestamps: true }
