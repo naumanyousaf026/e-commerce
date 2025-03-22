@@ -58,38 +58,69 @@ const CheckoutPage = () => {
         navigate("/cart");
     };
     
+    const handleGoHome = () => {
+        navigate("/");
+    };
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         
+        const orderData = {
+            products: cart.products.map(item => ({
+                product: item.productId,
+                quantity: item.quantity,
+            })),
+            totalAmount: cart.totalAmount,
+            paymentMethod: formData.paymentMethod,
+            address: formData.shippingAddress,
+            phoneNumber: formData.phoneNumber,
+        };
+
+        // Include accountNumber and transactionId if payment method is JazzCash or EasyPaisa
+        if (formData.paymentMethod !== "Cash on Delivery") {
+            orderData.accountNumber = formData.accountNumber;
+            orderData.transactionId = formData.transactionId;
+        }
+        
         try {
-            const orderData = {
-                products: cart.products.map(item => ({
-                    product: item.productId, // Change from productId to product
-                    quantity: item.quantity,
-                })),
-                totalAmount: cart.totalAmount,
-                paymentMethod: formData.paymentMethod,
-                address: formData.shippingAddress,
-                phoneNumber: formData.phoneNumber, // Add phoneNumber here
-            };
-            
-            const response = await fetch("http://localhost:5000/api/orders", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
-                body: JSON.stringify(orderData),
-            });
-            
+            let response;
+            if (formData.paymentMethod === "JazzCash") {
+                response = await fetch("http://localhost:5000/api/orders/jazzcash", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                    body: JSON.stringify(orderData),
+                });
+            } else if (formData.paymentMethod === "EasyPaisa") {
+                response = await fetch("http://localhost:5000/api/orders/easypaisa", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                    body: JSON.stringify(orderData),
+                });
+            } else {
+                // Handle Cash on Delivery or other payment methods
+                response = await fetch("http://localhost:5000/api/orders", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                    body: JSON.stringify(orderData),
+                });
+            }
+
             const data = await response.json();
             
             if (response.ok) {
                 setOrderSuccess(true);
-                setTimeout(() => {
-                    navigate("/checkout");
-                }, 3000);
+                // We'll remove the automatic redirect to let user view the success message
+                // and use the button to navigate home instead
             } else {
                 setError(data.message || "Failed to place order");
             }
@@ -100,64 +131,136 @@ const CheckoutPage = () => {
             setLoading(false);
         }
     };
-    
-    if (loading) {
-        return (
-            <>
-                <SmallHeader pageTitle="Checkout" />
-                <div className="flex justify-center items-center h-screen bg-gradient-to-r from-purple-50 to-indigo-50">
-                    <div className="p-8 rounded-full bg-white shadow-2xl">
-                        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#fa929d]"></div>
-                    </div>
-                </div>
-            </>
-        );
-    }
-    
-    if (error) {
-        return (
-            <>
-                <SmallHeader pageTitle="Checkout" />
-                <div className="container mx-auto p-8 text-center max-w-md">
-                    <div className="bg-red-50 border-2 border-red-200 p-8 rounded-2xl shadow-xl">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mx-auto text-red-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <p className="text-xl font-medium text-red-800 mb-4">{error}</p>
-                        <button 
-                            onClick={() => navigate("/cart")}
-                            className="mt-2 bg-gradient-to-r from-[#fa929d] to-pink-500 text-white px-6 py-3 rounded-xl font-bold shadow-lg hover:from-[#fa929d] hover:to-pink-600 transition-all duration-300 transform hover:scale-105"
-                        >
-                            Return to Cart
-                        </button>
-                    </div>
-                </div>
-            </>
-        );
-    }
-    
+
     if (orderSuccess) {
         return (
             <>
-                <SmallHeader pageTitle="Order Success" />
+                <SmallHeader pageTitle="Order Confirmed" />
                 <div className="min-h-screen bg-gradient-to-br from-purple-50 via-indigo-50 to-blue-50 py-12 px-4 flex items-center justify-center">
-                    <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full text-center">
-                        <div className="w-24 h-24 bg-green-100 rounded-full mx-auto flex items-center justify-center mb-6">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                            </svg>
-                        </div>
-                        <h2 className="text-3xl font-bold text-gray-800 mb-4">Order Placed Successfully!</h2>
-                        <p className="text-gray-600 mb-6">Thank you for your purchase. You will be redirected to your orders page shortly.</p>
-                        <div className="animate-pulse">
-                            <div className="h-2 bg-[#fa929d] rounded-full w-32 mx-auto"></div>
+                    <div className="container mx-auto max-w-2xl animate-fadeIn">
+                        <div className="bg-white rounded-3xl shadow-2xl overflow-hidden relative">
+                            {/* Success animation background */}
+                            <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-teal-500 opacity-10"></div>
+                            
+                            {/* Success content */}
+                            <div className="p-8 relative z-10">
+                                {/* Circle check animation */}
+                                <div className="w-24 h-24 rounded-full bg-gradient-to-r from-green-400 to-teal-500 mx-auto flex items-center justify-center mb-6 transform transition-all duration-700 scale-100 animate-bounce-once">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                                    </svg>
+                                </div>
+                                
+                                <h2 className="text-4xl font-extrabold text-center text-gray-800 mb-2 tracking-tight">Order Confirmed!</h2>
+                                <p className="text-gray-600 text-center text-lg mb-8">
+                                    Your order has been placed successfully. Thank you for shopping with us!
+                                </p>
+                                
+                                <div className="bg-gray-50 rounded-xl p-6 mb-8">
+                                    <h3 className="text-xl font-bold text-gray-800 mb-4">Order Details</h3>
+                                    <div className="space-y-3">
+                                        <div className="flex justify-between">
+                                            <span className="text-gray-600">Order Amount:</span>
+                                            <span className="font-semibold">${(cart?.totalAmount || 0).toFixed(2)}</span>
+                                        </div>
+                                        <div className="flex justify-between">
+                                            <span className="text-gray-600">Payment Method:</span>
+                                            <span className="font-semibold">{formData.paymentMethod}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                {/* Navigation buttons */}
+                                <div className="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4">
+                                    <button 
+                                        onClick={handleGoHome}
+                                        className="w-full md:w-auto px-8 py-4 bg-gradient-to-r from-[#fa929d] to-[#fa929d] text-white rounded-xl font-bold shadow-lg hover:from-[#e88490] hover:to-[#e88490] transition-all duration-300 transform hover:scale-105 flex items-center justify-center"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7m-14 0l2 2m0 0l7 7 7-7m-14 0l2-2" />
+                                        </svg>
+                                        Go to Home Page
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            {/* Confetti animation (CSS-only) */}
+                            <div className="confetti-container absolute inset-0 overflow-hidden pointer-events-none">
+                                {[...Array(20)].map((_, i) => (
+                                    <div 
+                                        key={i}
+                                        className={`confetti-${i % 5} opacity-70`}
+                                        style={{
+                                            left: `${Math.random() * 100}%`,
+                                            animationDelay: `${Math.random() * 5}s`,
+                                            backgroundColor: ['#fa929d', '#f8b195', '#f67280', '#c06c84', '#6c5b7b'][i % 5]
+                                        }}
+                                    ></div>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>
+                
+                {/* Add CSS animations */}
+                <style jsx>{`
+                    @keyframes fadeIn {
+                        from { opacity: 0; transform: translateY(20px); }
+                        to { opacity: 1; transform: translateY(0); }
+                    }
+                    
+                    @keyframes bounceOnce {
+                        0% { transform: scale(0); }
+                        50% { transform: scale(1.1); }
+                        70% { transform: scale(0.95); }
+                        100% { transform: scale(1); }
+                    }
+                    
+                    @keyframes confettiFall {
+                        0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+                        100% { transform: translateY(calc(100vh)) rotate(360deg); opacity: 0; }
+                    }
+                    
+                    .animate-fadeIn {
+                        animation: fadeIn 0.8s ease-out forwards;
+                    }
+                    
+                    .animate-bounce-once {
+                        animation: bounceOnce 0.8s ease-out forwards;
+                    }
+                    
+                    .confetti-container div {
+                        position: absolute;
+                        width: 10px;
+                        height: 10px;
+                        top: -10px;
+                        animation: confettiFall linear forwards;
+                    }
+                    
+                    .confetti-0 {
+                        animation-duration: 2.5s;
+                    }
+                    
+                    .confetti-1 {
+                        animation-duration: 2.1s;
+                    }
+                    
+                    .confetti-2 {
+                        animation-duration: 3.2s;
+                    }
+                    
+                    .confetti-3 {
+                        animation-duration: 1.5s;
+                    }
+                    
+                    .confetti-4 {
+                        animation-duration: 2.7s;
+                    }
+                `}</style>
             </>
         );
     }
-    
+
     return (
         <>
             <SmallHeader pageTitle="Checkout" />
@@ -226,7 +329,7 @@ const CheckoutPage = () => {
                                                 value={formData.accountNumber}
                                                 onChange={handleInputChange}
                                                 className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#fa929d] focus:border-[#fa929d]"
-                                                required={formData.paymentMethod !== "Cash on Delivery"}
+                                                required
                                                 placeholder={`Your ${formData.paymentMethod} account number`}
                                             />
                                         </div>
@@ -240,7 +343,7 @@ const CheckoutPage = () => {
                                                 value={formData.transactionId}
                                                 onChange={handleInputChange}
                                                 className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#fa929d] focus:border-[#fa929d]"
-                                                required={formData.paymentMethod !== "Cash on Delivery"}
+                                                required
                                                 placeholder="Transaction ID from your payment"
                                             />
                                         </div>

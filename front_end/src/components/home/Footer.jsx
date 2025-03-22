@@ -9,7 +9,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
           {/* Logo & About */}
           <div>
-            <img src="logo_4_4_176x.avif" alt="Logo" className="mb-4" />
+            <img src="https://ps-beautyshop.myshopify.com/cdn/shop/files/logo_4_5.png?v=1613696616" alt="Logo" className="mb-4" />
             <p className="text-sm">
               Lorem ipsum dolor sit amet consectetur adipisicing elit. At ab vel
               beatae rem? Perspiciatis nam praesentium quidem quo.
@@ -27,11 +27,12 @@ const Footer = () => {
           <div>
             <h5 className="font-bold">MAIN MENU</h5>
             <ul className="mt-4 space-y-2">
-              {["Home", "Search", "Privacy Policy", "Shipping Info", "Latest News", "Catalog"].map((item) => (
-                <li key={item}>
-                  <a href="#" className="hover:underline">{item}</a>
-                </li>
-              ))}
+              <li><a href="/" className="hover:underline">Home</a></li>
+              <li><a href="/aboutUs" className="hover:underline">About Us</a></li>
+              <li><a href="/contactUs" className="hover:underline">Contact Us</a></li>
+              <li><a href="/Blog" className="hover:underline">Blog</a></li>
+              <li><a href="/product" className="hover:underline">Products</a></li>
+              <li><a href="/bestProduct" className="hover:underline">Best Product</a></li>
             </ul>
           </div>
 
@@ -39,11 +40,12 @@ const Footer = () => {
           <div>
             <h5 className="font-bold">QUICK VIEW</h5>
             <ul className="mt-4 space-y-2">
-              {["Best Product", "Cosmetics", "Beauty World", "Shipping Info", "Offer Collection", "Mega Collection"].map((item) => (
-                <li key={item}>
-                  <a href="#" className="hover:underline">{item}</a>
-                </li>
-              ))}
+              <li><a href="/cosmetics" className="hover:underline">Cosmetics</a></li>
+              <li><a href="/beautyWorld" className="hover:underline">Beauty World</a></li>
+              <li><a href="/offerCollection" className="hover:underline">Offer Collection</a></li>
+              <li><a href="/megaCollection" className="hover:underline">Mega Collection</a></li>
+              <li><a href="/skincare" className="hover:underline">Skincare</a></li>
+              <li><a href="/FragranceProducts" className="hover:underline">Fragrance Products</a></li>
             </ul>
           </div>
 
@@ -51,11 +53,12 @@ const Footer = () => {
           <div>
             <h5 className="font-bold">LINKS</h5>
             <ul className="mt-4 space-y-2">
-              {["About Us", "Contact Us", "Faq", "Portfolio", "Search", "Wishlist"].map((item) => (
-                <li key={item}>
-                  <a href="#" className="hover:underline">{item}</a>
-                </li>
-              ))}
+              <li><a href="/Cart" className="hover:underline">Cart</a></li>
+              <li><a href="/Checkout" className="hover:underline">Checkout</a></li>
+              <li><a href="/UserProfile" className="hover:underline">User Profile</a></li>
+              <li><a href="/UserProfile" className="hover:underline">User Detail</a></li>
+              <li><a href="/checkout" className="hover:underline">Orders Detail</a></li>
+              <li><a href="/HairCare" className="hover:underline">Hair Care</a></li>
             </ul>
           </div>
 

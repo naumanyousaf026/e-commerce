@@ -18,6 +18,7 @@
     "@tailwindcss/vite": "^4.0.7",
     "axios": "^1.8.1",
     "chart.js": "^4.4.8",
+    "crypto-js": "^4.2.0",
     "d3-scale": "^4.0.2",
     "ionicons": "^7.4.0",
     "lucide-react": "^0.477.0",

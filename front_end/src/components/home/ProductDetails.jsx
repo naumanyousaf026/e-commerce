@@ -1,10 +1,14 @@
 import React, { useEffect, useState, useContext } from "react";
-import { useParams } from "react-router-dom";
-import PropTypes from 'prop-types';
+import { useParams, useNavigate } from "react-router-dom";
+import { IonIcon } from "@ionic/react";
+import { heartOutline, heart, starOutline, star, bagAddOutline } from "ionicons/icons";
+import Footer from "../home/Footer";
+import SmallHeader from '../home/SmallHeader';
 import { CartContext } from "./CartContext";
 
 const API_BASE_URL = "http://localhost:5000";
 
+// Helper function to construct full image URLs
 const getImageUrl = (imagePath) => {
   if (!imagePath) return "";
   return imagePath.startsWith("http")
@@ -14,30 +18,41 @@ const getImageUrl = (imagePath) => {
 
 const ProductDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { addToCart, removeFromCart } = useContext(CartContext);
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
   const [showAddNotification, setShowAddNotification] = useState(false);
-  const [showRemoveNotification, setShowRemoveNotification] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
 
   useEffect(() => {
-    fetch(`${API_BASE_URL}/api/products/details/${id}`)
-      .then((res) => res.json())
-      .then((data) => {
+    const fetchProductDetails = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/products/details/${id}`);
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
         setProduct(data);
-        setLoading(false);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("Error fetching product details:", error);
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+
+    fetchProductDetails();
   }, [id]);
 
   const getProductImages = () => {
     if (!product) return [];
     return [product.image];
+  };
+
+  const toggleFavorite = () => {
+    setIsFavorite(!isFavorite);
   };
 
   const handleAddToCart = async () => {
@@ -58,7 +73,11 @@ const ProductDetails = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-        body: JSON.stringify({ productId: product._id, quantity, discountedPrice }),
+        body: JSON.stringify({ 
+          productId: product._id || product.id, 
+          quantity, 
+          discountedPrice 
+        }),
       });
 
       if (!response.ok) {
@@ -75,47 +94,63 @@ const ProductDetails = () => {
     }
   };
 
-  const handleRemoveFromCart = async () => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/cart/${product._id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+  const renderStars = (rating = 0) => {
+    const stars = [];
+    const numRating = Number(rating) || 0;
+    const fullStars = Math.floor(numRating);
+    const hasHalfStar = numRating % 1 >= 0.5;
 
-      if (!response.ok) {
-        throw new Error("Failed to remove product from cart");
+    for (let i = 0; i < 5; i++) {
+      if (i < fullStars) {
+        stars.push(<IonIcon key={i} icon={star} className="text-yellow-400" />);
+      } else if (i === fullStars && hasHalfStar) {
+        stars.push(<IonIcon key={i} icon={star} className="text-yellow-400" />);
+      } else {
+        stars.push(<IonIcon key={i} icon={starOutline} className="text-gray-300" />);
       }
-
-      // Update local cart context
-      removeFromCart(product._id);
-
-      setShowRemoveNotification(true);
-      setTimeout(() => setShowRemoveNotification(false), 2000);
-    } catch (error) {
-      console.error("Error removing from cart:", error);
     }
-  };
 
-  // Rest of the component remains the same as in the original code...
-  
-  // Remove the prop types as we're no longer passing addToCart and removeFromCart as props
+    return stars;
+  };
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen bg-gray-50">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500 border-opacity-50"></div>
+      <div className="bg-gray-50 min-h-screen">
+        <SmallHeader pageTitle="Product Details" />
+        <div className="flex justify-center items-center min-h-screen">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {[...Array(2)].map((_, i) => (
+              <div key={i} className="bg-white rounded-lg shadow-md overflow-hidden animate-pulse">
+                <div className="h-64 bg-gray-200"></div>
+                <div className="p-4">
+                  <div className="h-4 bg-gray-200 rounded mb-2"></div>
+                  <div className="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
+                  <div className="h-6 bg-gray-200 rounded mb-4"></div>
+                  <div className="h-10 bg-gray-200 rounded"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     );
   }
 
   if (!product) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
-        <div className="text-center p-8 bg-white rounded-xl shadow-md">
-          <h2 className="text-2xl font-bold text-red-500 mb-2">Product Not Found</h2>
-          <p className="text-gray-600">Sorry, we couldn't find the product you're looking for.</p>
+      <div className="bg-gray-50 min-h-screen">
+        <SmallHeader pageTitle="Product Not Found" />
+        <div className="min-h-screen flex flex-col items-center justify-center">
+          <div className="text-center p-8 bg-white rounded-xl shadow-md">
+            <h2 className="text-2xl font-bold text-red-500 mb-2">Product Not Found</h2>
+            <p className="text-gray-600">Sorry, we couldn't find the product you're looking for.</p>
+            <button 
+              onClick={() => navigate(-1)}
+              className="mt-4 bg-[#fa929d] hover:bg-[#e87e89] text-white font-medium px-6 py-3 rounded-lg transition-colors duration-300"
+            >
+              Go Back
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -125,99 +160,132 @@ const ProductDetails = () => {
     ? product.price - (product.price * product.discount) / 100
     : product.price;
 
-  const displayPrice = (price) => (price !== undefined ? price.toFixed(2) : "N/A");
-
   const images = getProductImages();
+  const category = product.category || "Product";
 
   return (
-    <div className="bg-gray-50 py-12">
+    <div className="bg-gray-50 min-h-screen">
+      <SmallHeader pageTitle={product.title || "Product Details"} />
+      
       {showAddNotification && (
         <div className="fixed top-6 right-6 bg-green-500 text-white p-4 rounded-lg shadow-lg z-50 animate-bounce">
           Product added to cart!
         </div>
       )}
-      {showRemoveNotification && (
-        <div className="fixed top-6 right-6 bg-red-500 text-white p-4 rounded-lg shadow-lg z-50 animate-bounce">
-          Product removed from cart!
-        </div>
-      )}
       
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+      {/* Hero section */}
+      <div className="relative">
+        <div className="bg-gradient-to-r from-[#ffffff] to-[#fff5f6] py-12 px-4 md:px-8">
+          <div className="max-w-6xl mx-auto">
+            <h1 className="text-3xl md:text-5xl font-bold text-gray-800 mb-3">{product.title || product.name}</h1>
+            <p className="text-gray-600 mb-6 md:w-2/3 lg:w-1/2 text-lg">
+              {product.details || product.description || "Experience premium quality and exceptional design with our exclusive product."}
+            </p>
+          </div>
+        </div>
+      </div>
+      
+      {/* Product Details */}
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        <div className="bg-white rounded-lg shadow-md overflow-hidden">
           <div className="md:flex">
             {/* Product Images Section */}
             <div className="md:w-1/2 p-6">
-              <div className="relative h-96 rounded-xl overflow-hidden mb-4 bg-gray-100">
+              <div className="relative h-96 rounded-xl overflow-hidden mb-4">
                 <img
                   src={getImageUrl(images[activeImage])}
-                  alt={product.title}
-                  className="w-full h-full object-contain"
+                  alt={product.title || product.name}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = "/api/placeholder/400/400";
+                  }}
                 />
+                <button 
+                  onClick={toggleFavorite} 
+                  className="absolute top-3 right-3 bg-white rounded-full p-2 shadow-md hover:bg-gray-100 transition-colors duration-300"
+                >
+                  <IonIcon 
+                    icon={isFavorite ? heart : heartOutline} 
+                    className={`text-xl ${isFavorite ? 'text-[#fa929d]' : 'text-gray-500'}`} 
+                  />
+                </button>
                 {product.discount > 0 && (
-                  <div className="absolute top-4 right-4 bg-red-500 text-white text-sm font-bold px-3 py-1 rounded-full">
+                  <span className="absolute top-3 left-3 bg-[#fa929d] text-white text-xs font-bold uppercase px-2 py-1 rounded">
                     {product.discount}% OFF
-                  </div>
+                  </span>
+                )}
+                {product.isNew && (
+                  <span className="absolute top-3 left-3 bg-green-500 text-white text-xs font-bold uppercase px-2 py-1 rounded">
+                    New
+                  </span>
+                )}
+                {product.isBestseller && (
+                  <span className="absolute top-3 left-3 bg-[#fa929d] text-white text-xs font-bold uppercase px-2 py-1 rounded">
+                    Bestseller
+                  </span>
                 )}
               </div>
               
-              {/* Thumbnail Gallery */}
-              <div className="flex space-x-2 overflow-x-auto pb-2">
-                {images.map((img, index) => (
-                  <div
-                    key={index}
-                    onClick={() => setActiveImage(index)}
-                    className={`w-20 h-20 rounded-lg cursor-pointer border-2 ${
-                      activeImage === index ? "border-blue-500" : "border-gray-200"
-                    }`}
-                  >
-                    <img
-                      src={getImageUrl(img)}
-                      alt={`${product.title} view ${index + 1}`}
-                      className="w-full h-full object-cover rounded-lg"
-                    />
-                  </div>
-                ))}
-              </div>
+              {/* Thumbnail Gallery - only show if we have multiple images */}
+              {images.length > 1 && (
+                <div className="flex space-x-2 overflow-x-auto pb-2">
+                  {images.map((img, index) => (
+                    <div
+                      key={index}
+                      onClick={() => setActiveImage(index)}
+                      className={`w-20 h-20 rounded-lg cursor-pointer border-2 ${
+                        activeImage === index ? "border-[#fa929d]" : "border-gray-200"
+                      }`}
+                    >
+                      <img
+                        src={getImageUrl(img)}
+                        alt={`${product.title || product.name} view ${index + 1}`}
+                        className="w-full h-full object-cover rounded-lg"
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = "/api/placeholder/100/100";
+                        }}
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
             
             {/* Product Info Section */}
-            <div className="md:w-1/2 p-8">
-              <div className="flex items-center mb-4">
-                <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">
-                  {product.category}
+            <div className="md:w-1/2 p-6">
+              <div className="flex flex-wrap items-center mb-4">
+                <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium">
+                  {category}
                 </span>
-                <div className="ml-auto flex">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <svg
-                      key={star}
-                      className={`w-5 h-5 ${
-                        star <= 4 ? "text-yellow-400" : "text-gray-300"
-                      }`}
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  ))}
-                  <span className="ml-2 text-gray-600 text-sm">(42 reviews)</span>
+                <div className="ml-auto flex items-center">
+                  <div className="flex items-center">
+                    {renderStars(product.rating)}
+                    <span className="text-gray-600 text-sm ml-1">({product.rating || "0"})</span>
+                  </div>
                 </div>
               </div>
-              
-              <h1 className="text-3xl font-bold text-gray-800 mb-2">{product.title}</h1>
               
               <div className="mb-6">
                 {product.discount ? (
                   <div className="flex items-center">
-                    <span className="text-3xl font-bold text-gray-900">${displayPrice(discountedPrice)}</span>
-                    <span className="ml-3 text-lg text-gray-400 line-through">${displayPrice(product.price)}</span>
+                    <span className="text-2xl font-bold text-gray-900">
+                      ${typeof discountedPrice === 'number' ? discountedPrice.toFixed(2) : "0.00"}
+                    </span>
+                    <span className="ml-3 text-lg text-gray-400 line-through">
+                      ${typeof product.price === 'number' ? product.price.toFixed(2) : "0.00"}
+                    </span>
                   </div>
                 ) : (
-                  <span className="text-3xl font-bold text-gray-900">${displayPrice(product.price)}</span>
+                  <span className="text-2xl font-bold text-gray-900">
+                    ${typeof product.price === 'number' ? product.price.toFixed(2) : "0.00"}
+                  </span>
                 )}
               </div>
               
               <div className="border-t border-b border-gray-200 py-4 my-6">
-                <p className="text-gray-700 leading-relaxed">{product.details}</p>
+                <p className="text-gray-700 leading-relaxed">{product.details || product.description || "No description available."}</p>
               </div>
               
               <div className="mb-6">
@@ -248,18 +316,16 @@ const ProductDetails = () => {
               <div className="flex flex-col sm:flex-row gap-4">
                 <button
                   onClick={handleAddToCart}
-                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow transition duration-300 flex items-center justify-center"
+                  className="flex-1 bg-white text-[#fa929d] border border-[#fa929d] hover:bg-[#fa929d] hover:text-white px-4 py-3 rounded-lg flex items-center justify-center transition-colors duration-300"
                 >
-                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                  </svg>
+                  <IonIcon icon={bagAddOutline} className="mr-2" />
                   Add to Cart
                 </button>
                 <button
-                  onClick={handleRemoveFromCart}
-                  className="flex-1 bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-lg shadow transition duration-300"
+                  onClick={() => navigate('/cart')}
+                  className="flex-1 bg-[#fa929d] hover:bg-[#e87e89] text-white font-medium px-6 py-3 rounded-lg transition-colors duration-300"
                 >
-                  Remove from Cart
+                  View Cart
                 </button>
               </div>
               
@@ -282,13 +348,10 @@ const ProductDetails = () => {
           </div>
         </div>
       </div>
+      
+      <Footer />
     </div>
   );
-};
-
-ProductDetails.propTypes = {
-  addToCart: PropTypes.func.isRequired,
-  removeFromCart: PropTypes.func.isRequired,
 };
 
 export default ProductDetails;

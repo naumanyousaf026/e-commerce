@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import SmallHeader from '../home/SmallHeader';
 import Avatar from 'react-avatar';
+import Footer from "../home/Footer";
 
 const API_BASE_URL = 'http://localhost:5000';
 
@@ -123,21 +124,21 @@ const UserProfile = () => {
   };
 
   return (
-    <div className="bg-gradient-to-b from-pink-50 to-white min-h-screen">
+    <div className="bg-gray-50 min-h-screen">
       <SmallHeader pageTitle="My Account" />
 
       <div className="max-w-7xl mx-auto px-4 py-4 bg-white shadow-sm">
         <div className="flex flex-wrap">
           <button 
             onClick={() => setActiveTab('profile')}
-            className={`mr-6 pb-2 font-medium flex items-center transition-all duration-300 ${activeTab === 'profile' ? 'text-pink-500 border-b-2 border-pink-500 scale-105' : 'text-gray-600 hover:text-pink-400'}`}
+            className={`mr-6 pb-2 font-medium flex items-center transition-all duration-300 ${activeTab === 'profile' ? 'text-[#fa929d] border-b-2 border-[#fa929d] scale-105' : 'text-gray-600 hover:text-[#fa929d]'}`}
           >
-            <User  size={18} className="mr-2" />
+            <User size={18} className="mr-2" />
             Profile
           </button>
           <button 
             onClick={() => setActiveTab('orders')}
-            className={`mr-6 pb-2 font-medium flex items-center transition-all duration-300 ${activeTab === 'orders' ? 'text-pink-500 border-b-2 border-pink-500 scale-105' : 'text-gray-600 hover:text-pink-400'}`}
+            className={`mr-6 pb-2 font-medium flex items-center transition-all duration-300 ${activeTab === 'orders' ? 'text-[#fa929d] border-b-2 border-[#fa929d] scale-105' : 'text-gray-600 hover:text-[#fa929d]'}`}
           >
             <ShoppingBag size={18} className="mr-2" />
             Order History
@@ -147,12 +148,12 @@ const UserProfile = () => {
 
       <div className="max-w-7xl mx-auto px-4 py-8">
         {activeTab === 'profile' && (
-          <div className="bg-white shadow-lg rounded-xl overflow-hidden border border-pink-100">
+          <div className="bg-white shadow-lg rounded-xl overflow-hidden border border-gray-200">
             <div className="p-8">
               <div className="flex flex-col md:flex-row">
                 <div className="md:w-1/3 flex flex-col items-center mb-6 md:mb-0">
                   <div className="relative group">
-                    <div className="w-40 h-40 rounded-full overflow-hidden border-4 border-pink-200 shadow-md group-hover:border-pink-300 transition-all duration-300">
+                    <div className="w-40 h-40 rounded-full overflow-hidden border-4 border-[#fff5f6] shadow-md group-hover:border-[#fa929d] transition-all duration-300">
                       {userData.profileImage ? (
                         <img
                           src={userData.profileImage}
@@ -166,17 +167,17 @@ const UserProfile = () => {
                         </div>
                       )}
                     </div>
-                    <div className="absolute bottom-2 right-2 bg-pink-500 p-2 rounded-full text-white cursor-pointer hover:bg-pink-600 transition-colors shadow-md">
+                    <div className="absolute bottom-2 right-2 bg-[#fa929d] p-2 rounded-full text-white cursor-pointer hover:bg-[#e87e89] transition-colors shadow-md">
                       <Camera size={16} />
                     </div>
                   </div>
-                  <h2 className="mt-6 text-2xl font-semibold text-gray-900">{userData.name}</h2>
+                  <h2 className="mt-6 text-2xl font-semibold text-gray-800">{userData.name}</h2>
                   <p className="text-sm text-gray-500 mb-4 flex items-center">
-                    <Calendar size={14} className="mr-1 text-pink-400" />
+                    <Calendar size={14} className="mr-1 text-[#fa929d]" />
                     Member since {userData.joinDate}
                   </p>
                   
-                  <div className="w-full bg-gradient-to-r from-pink-500 to-rose-500 p-4 rounded-xl text-white shadow-md mb-6">
+                  <div className="w-full bg-[#fa929d] p-4 rounded-xl text-white shadow-md mb-6">
                     <div className="flex justify-between items-center mb-2">
                       <span className="font-medium">Rewards Points</span>
                       <Gift size={18} />
@@ -194,13 +195,13 @@ const UserProfile = () => {
                   </div>
                   
                   <div className="mt-2 w-full flex flex-col space-y-3">
-                    <button className="w-full flex items-center justify-center space-x-2 px-6 py-3 rounded-xl bg-gradient-to-r from-pink-500 to-rose-500 text-white hover:from-pink-600 hover:to-rose-600 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-1">
+                    <button className="w-full flex items-center justify-center space-x-2 px-6 py-3 rounded-lg bg-[#fa929d] text-white hover:bg-[#e87e89] transition-all shadow-md hover:shadow-lg transform hover:-translate-y-1">
                       <Settings size={16} />
                       <span>Account Settings</span>
                     </button>
                     <button 
                       onClick={handleLogout} 
-                      className="w-full flex items-center justify-center space-x-2 px-6 py-3 rounded-xl border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition-all shadow-sm hover:shadow transform hover:-translate-y-1"
+                      className="w-full flex items-center justify-center space-x-2 px-6 py-3 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition-all shadow-sm hover:shadow transform hover:-translate-y-1"
                     >
                       <LogOut size={16} />
                       <span>Logout</span>
@@ -209,17 +210,17 @@ const UserProfile = () => {
                 </div>
                 
                 <div className="md:w-2/3 md:pl-8">
-                  <h3 className="text-xl font-medium text-gray-900 mb-6 flex items-center">
-                    <span className="bg-pink-100 p-2 rounded-lg mr-3 text-pink-500">
+                  <h3 className="text-xl font-medium text-gray-800 mb-6 flex items-center">
+                    <span className="bg-[#fff5f6] p-2 rounded-lg mr-3 text-[#fa929d]">
                       <User  size={18} />
                     </span>
                     Personal Information
                   </h3>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="bg-white p-5 rounded-xl border border-pink-100 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
+                    <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
                       <div className="flex items-center mb-3">
-                        <div className="bg-gradient-to-r from-pink-500 to-rose-500 p-2 rounded-full text-white mr-3">
+                        <div className="bg-[#fa929d] p-2 rounded-full text-white mr-3">
                           <User  size={16} />
                         </div>
                         <p className="text-sm font-medium text-gray-500">Full Name</p>
@@ -227,9 +228,9 @@ const UserProfile = () => {
                       <p className="text-gray-900 font-medium pl-10">{userData.name}</p>
                     </div>
                     
-                    <div className="bg-white p-5 rounded-xl border border-pink-100 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
+                    <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
                       <div className="flex items-center mb-3">
-                        <div className="bg-gradient-to-r from-pink-500 to-rose-500 p-2 rounded-full text-white mr-3">
+                        <div className="bg-[#fa929d] p-2 rounded-full text-white mr-3">
                           <Mail size={16} />
                         </div>
                         <p className="text-sm font-medium text-gray-500">Email Address</p>
@@ -237,9 +238,9 @@ const UserProfile = () => {
                       <p className="text-gray-900 font-medium pl-10">{userData.email}</p>
                     </div>
                     
-                    <div className="bg-white p-5 rounded-xl border border-pink-100 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
+                    <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
                       <div className="flex items-center mb-3">
-                        <div className="bg-gradient-to-r from-pink-500 to-rose-500 p-2 rounded-full text-white mr-3">
+                        <div className="bg-[#fa929d] p-2 rounded-full text-white mr-3">
                           <Phone size={16} />
                         </div>
                         <p className="text-sm font-medium text-gray-500">Phone Number</p>
@@ -247,9 +248,9 @@ const UserProfile = () => {
                       <p className="text-gray-900 font-medium pl-10">{userData.phone}</p>
                     </div>
                     
-                    <div className="bg-white p-5 rounded-xl border border-pink-100 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
+                    <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
                       <div className="flex items-center mb-3">
-                        <div className="bg-gradient-to-r from-pink-500 to-rose-500 p-2 rounded-full text-white mr-3">
+                        <div className="bg-[#fa929d] p-2 rounded-full text-white mr-3">
                           <MapPin size={16} />
                         </div>
                         <p className="text-sm font-medium text-gray-500">Shipping Address</p>
@@ -259,7 +260,7 @@ const UserProfile = () => {
                   </div>
                   
                   <div className="mt-8 flex justify-end">
-                    <button className="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-8 py-3 rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-1">
+                    <button className="bg-[#fa929d] text-white px-8 py-3 rounded-lg hover:bg-[#e87e89] transition-all shadow-md hover:shadow-lg transform hover:-translate-y-1">
                       Edit Profile
                     </button>
                   </div>
@@ -270,10 +271,10 @@ const UserProfile = () => {
         )}
 
         {activeTab === 'orders' && (
-          <div className="bg-white shadow-lg rounded-xl overflow-hidden border border-pink-100">
+          <div className="bg-white shadow-lg rounded-xl overflow-hidden border border-gray-200">
             <div className="p-8">
-              <h3 className="text-xl font-medium text-gray-900 mb-6 flex items-center">
-                <span className="bg-pink-100 p-2 rounded-lg mr-3 text-pink-500">
+              <h3 className="text-xl font-medium text-gray-800 mb-6 flex items-center">
+                <span className="bg-[#fff5f6] p-2 rounded-lg mr-3 text-[#fa929d]">
                   <ShoppingBag size={18} />
                 </span>
                 Your Order History
@@ -282,12 +283,12 @@ const UserProfile = () => {
               {Array.isArray(orders) && orders.length > 0 ? (
                 <div className="space-y-8">
                   {orders.map((order) => (
-                    <div key={order._id} className="bg-white rounded-xl overflow-hidden border border-pink-100 shadow-md hover:shadow-lg transition-all duration-300">
-                      <div className="bg-gradient-to-r from-pink-50 to-rose-50 p-4 border-b border-pink-100">
+                    <div key={order._id} className="bg-white rounded-xl overflow-hidden border border-gray-200 shadow-md hover:shadow-lg transition-all duration-300">
+                      <div className="bg-gradient-to-r from-[#ffffff] to-[#fff5f6] p-4 border-b border-gray-200">
                         <div className="flex flex-col sm:flex-row justify-between">
                           <div>
                             <span className="text-sm text-gray-500">Order ID:</span>
-                            <span className="ml-2 font-medium text-pink-700">{order._id}</span>
+                            <span className="ml-2 font-medium text-[#fa929d]">{order._id}</span>
                           </div>
                           <div>
                             <span className="text-sm text-gray-500">Placed on:</span>
@@ -305,9 +306,9 @@ const UserProfile = () => {
                       
                       <div className="p-6">
                         {order.products.map((item, index) => (
-                          <div key={index} className="flex flex-col sm:flex-row items-start sm:items-center py-4 border-b border-gray-100 last:border-0 hover:bg-pink-50 transition-colors rounded-lg p-2">
+                          <div key={index} className="flex flex-col sm:flex-row items-start sm:items-center py-4 border-b border-gray-100 last:border-0 hover:bg-[#fff5f6] transition-colors rounded-lg p-2">
                             <div className="flex-shrink-0 mb-4 sm:mb-0 sm:mr-6">
-                              <div className="relative overflow-hidden rounded-lg w-24 h-24 border border-pink-100 shadow-sm group">
+                              <div className="relative overflow-hidden rounded-lg w-24 h-24 border border-gray-200 shadow-sm group">
                                 <img 
                                   src={item.product.image || getRandomProductImage(item.product._id, item.product.name)}
                                   alt={item.product.name}
@@ -316,7 +317,7 @@ const UserProfile = () => {
                               </div>
                             </div>
                             <div className="flex-grow">
-                              <h4 className="text-lg font-medium text-gray-900 hover:text-pink-600 transition-colors cursor-pointer">{item.product.name}</h4>
+                              <h4 className="text-lg font-semibold text-gray-800 hover:text-[#fa929d] transition-colors cursor-pointer">{item.product.name}</h4>
                               <div className="flex items-center mt-1 mb-2">
                                 <Star size={14} className="text-yellow-400" />
                                 <Star size={14} className="text-yellow-400" />
@@ -328,11 +329,11 @@ const UserProfile = () => {
                               <div className="flex items-center">
                                 <p className="text-gray-500 text-sm">Quantity: {item.quantity}</p>
                                 <span className="mx-2 text-gray-300">|</span>
-                                <p className="text-pink-600 font-medium">${item.product.price.toFixed(2)}</p>
+                                <p className="text-[#fa929d] font-medium">${item.product.price.toFixed(2)}</p>
                               </div>
                             </div>
                             <div className="mt-4 sm:mt-0">
-                              <button className="px-4 py-2 border border-pink-500 text-pink-500 rounded-lg hover:bg-pink-500 hover:text-white transition-all duration-300 shadow-sm hover:shadow transform hover:-translate-y-1">
+                              <button className="px-4 py-2 border border-[#fa929d] text-[#fa929d] rounded-lg hover:bg-[#fa929d] hover:text-white transition-all duration-300 shadow-sm hover:shadow transform hover:-translate-y-1">
                                 Buy Again
                               </button>
                             </div>
@@ -340,17 +341,17 @@ const UserProfile = () => {
                         ))}
                       </div>
                       
-                      <div className="bg-gradient-to-r from-pink-50 to-rose-50 p-5 border-t border-pink-100">
+                      <div className="bg-gradient-to-r from-[#ffffff] to-[#fff5f6] p-5 border-t border-gray-200">
                         <div className="flex flex-col sm:flex-row justify-between items-center">
                           <div className="flex items-center mb-4 sm:mb-0">
-                            <div className="bg-white p-2 rounded-lg border border-pink-100 mr-3">
-                              <CreditCard size={18} className="text-pink-500" />
+                            <div className="bg-white p-2 rounded-lg border border-gray-200 mr-3">
+                              <CreditCard size={18} className="text-[#fa929d]" />
                             </div>
                             <span className="text-gray-700 font-medium">{order.paymentMethod}</span>
                           </div>
                           <div className="flex flex-col sm:items-end">
                             <span className="text-sm text-gray-500">Total Amount:</span>
-                            <span className="text-2xl font-bold bg-gradient-to-r from-pink-500 to-rose-500 text-transparent bg-clip-text">${order.totalAmount.toFixed(2)}</span>
+                            <span className="text-2xl font-bold text-[#fa929d]">${order.totalAmount.toFixed(2)}</span>
                           </div>
                         </div>
                       </div>
@@ -358,13 +359,13 @@ const UserProfile = () => {
                   ))}
                 </div>
               ) : (
-                <div className="bg-white p-12 rounded-xl text-center border border-pink-100 shadow-inner">
-                  <div className="bg-pink-50 p-6 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-6">
-                    <ShoppingBag size={48} className="text-pink-400" />
+                <div className="bg-white p-12 rounded-xl text-center border border-gray-200 shadow-inner">
+                  <div className="bg-[#fff5f6] p-6 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-6">
+                    <ShoppingBag size={48} className="text-[#fa929d]" />
                   </div>
                   <h3 className="text-xl font-medium text-gray-900 mb-2">No orders yet</h3>
                   <p className="text-gray-500 mb-6 max-w-md mx-auto">You haven't placed any orders yet. Browse our collection to find your perfect products.</p>
-                  <button className="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-8 py-3 rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-1">
+                  <button className="bg-[#fa929d] text-white px-8 py-3 rounded-lg hover:bg-[#e87e89] transition-all shadow-md hover:shadow-lg transform hover:-translate-y-1">
                     Start Shopping
                   </button>
                 </div>
@@ -373,6 +374,8 @@ const UserProfile = () => {
           </div>
         )}
       </div>
+      
+      <Footer />
     </div>
   );
 };

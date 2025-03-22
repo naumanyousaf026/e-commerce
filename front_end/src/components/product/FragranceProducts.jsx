@@ -3,7 +3,7 @@ import { IonIcon } from "@ionic/react";
 import { heartOutline, heart, starOutline, star, bagAddOutline, filterOutline } from "ionicons/icons";
 import Footer from "../home/Footer";
 import SmallHeader from '../home/SmallHeader';
-
+import { Link, useNavigate } from "react-router-dom"; 
 const API_BASE_URL = "http://localhost:5000";
 
 const getImageUrl = (imagePath) => {
@@ -20,6 +20,7 @@ const FragranceProducts = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [showFilters, setShowFilters] = useState(false);
   const [favorites, setFavorites] = useState([]);
+  const navigate = useNavigate(); // Add this hook for navigation
 
   const fragranceCategories = [
     { id: "all", name: "All Fragrances" },
@@ -41,13 +42,16 @@ const FragranceProducts = () => {
         const data = await response.json();
         // Map the data to the expected format
         const formattedProducts = data.map(product => ({
-          id: product._id.$oid, // Use the ID from the response
+          id: product._id, // Use the ID from the response
+          _id: product._id, // Add this to maintain compatibility with both components
           name: product.name,
+          title: product.name, // Add this for compatibility with ProductDetails
           price: product.price,
           rating: product.rating,
           category: product.category,
-          image: getImageUrl(product.image), // Use the getImageUrl function
+          image: product.image, // Keep the original path for consistency
           description: product.details, // Use the details field for description
+          details: product.details, // Add this for compatibility with ProductDetails
           size: "50ml", // You can adjust this as needed
           isNew: false, // Set this based on your logic
           isBestseller: false // Set this based on your logic
@@ -68,6 +72,47 @@ const FragranceProducts = () => {
       setFavorites(favorites.filter(id => id !== productId));
     } else {
       setFavorites([...favorites, productId]);
+    }
+  };
+
+  // Modified to navigate to product details after adding to cart
+  const handleAddToCart = async (product) => {
+    try {
+      const discountedPrice = product.discount
+        ? product.price - (product.price * product.discount) / 100
+        : product.price;
+
+      const cartItem = {
+        ...product,
+        quantity: 1,
+        discountedPrice
+      };
+
+      // Add to cart API call (if needed)
+      const response = await fetch(`${API_BASE_URL}/api/cart/add-to-cart`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({ 
+          productId: product._id || product.id, 
+          quantity: 1, 
+          discountedPrice 
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to add product to cart");
+      }
+
+      // After adding to cart, navigate to product details page
+// In your handleAddToCart function
+        navigate(`/product/${product._id || product.id}`);
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      // Still navigate even if there's an error with the cart
+      navigate(`/product/${product._id || product.id}`);
     }
   };
 
@@ -113,6 +158,7 @@ const FragranceProducts = () => {
         <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-[url('/api/placeholder/400/600')] bg-cover bg-center hidden lg:block"></div>
       </div>
       
+      {/* Rest of the component remains the same... */}
       {/* Filtering section */}
       <div className="bg-white py-8 px-4 md:px-8 border-b border-gray-200">
         <div className="max-w-6xl mx-auto">
@@ -259,159 +305,7 @@ const FragranceProducts = () => {
           </>
         )}
       </div>
-      
-  
-      
-      {/* Fragrance guide section */}
-      <div className="bg-[#fff5f6] py-12 px-4">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-2">Fragrance Guide</h2>
-          <p className="text-center text-gray-600 mb-8">Understanding fragrance families and how to choose your perfect scent</p>
-          
-          <div className="bg-white rounded-lg shadow-md p-6 md:p-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h3 className="text-xl font-semibold text-gray-800 mb-3">How to Choose a Fragrance</h3>
-                <p className="text-gray-600 mb-4">Finding your signature scent is a personal journey. Consider these factors:</p>
-                <ul className="space-y-2 text-gray-600">
-                  <li className="flex items-start">
-                    <span className="text-[#fa929d] mr-2">•</span>
-                    <span>Your personal preferences and the occasions you'll wear it</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-[#fa929d] mr-2">•</span>
-                    <span>The fragrance family that resonates with you</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-[#fa929d] mr-2">•</span>
-                    <span>How the scent evolves on your skin over time</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-[#fa929d] mr-2">•</span>
-                    <span>The season and climate where you'll wear it</span>
-                  </li>
-                </ul>
-              </div>
-              
-              <div>
-                <h3 className="text-xl font-semibold text-gray-800 mb-3">Fragrance Families</h3>
-                <div className="space-y-3">
-                  <div>
-                    <h4 className="font-medium text-gray-800">Floral</h4>
-                    <p className="text-gray-600 text-sm">Rose, jasmine, lily - romantic and feminine</p>
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-gray-800">Woody</h4>
-                    <p className="text-gray-600 text-sm">Sandalwood, cedar, pine - warm and earthy</p>
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-gray-800">Oriental</h4>
-                    <p className="text-gray-600 text-sm">Vanilla, spices, amber - rich and exotic</p>
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-gray-800">Fresh</h4>
-                    <p className="text-gray-600 text-sm">Ocean, green notes - clean and invigorating</p>
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-gray-800">Citrus</h4>
-                    <p className="text-gray-600 text-sm">Lemon, bergamot, orange - bright and uplifting</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <div className="mt-6 text-center">
-              <button className="text-[#fa929d] hover:text-[#e87e89] font-medium hover:underline">
-                Read our complete fragrance guide
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      {/* Testimonials */}
-      <div className="bg-white py-12 px-4">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-8">What Our Customers Say</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-gray-50 p-6 rounded-lg">
-              <div className="flex text-yellow-400 mb-3">
-                <IonIcon icon={star} />
-                <IonIcon icon={star} />
-                <IonIcon icon={star} />
-                <IonIcon icon={star} />
-                <IonIcon icon={star} />
-              </div>
-              <p className="text-gray-600 italic mb-4">"The Amber & Sandalwood fragrance is absolutely divine! I receive compliments every time I wear it. Long-lasting and sophisticated."</p>
-              <div className="flex items-center">
-                <div className="w-10 h-10 bg-gray-300 rounded-full mr-3"></div>
-                <div>
-                  <p className="font-medium text-gray-800">Sarah L.</p>
-                  <p className="text-sm text-gray-500">Verified Buyer</p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="bg-gray-50 p-6 rounded-lg">
-              <div className="flex text-yellow-400 mb-3">
-                <IonIcon icon={star} />
-                <IonIcon icon={star} />
-                <IonIcon icon={star} />
-                <IonIcon icon={star} />
-                <IonIcon icon={star} />
-              </div>
-              <p className="text-gray-600 italic mb-4">"I've been using Ocean Breeze for months now and it's become my signature scent. Fresh but not overpowering, perfect for daily wear."</p>
-              <div className="flex items-center">
-                <div className="w-10 h-10 bg-gray-300 rounded-full mr-3"></div>
-                <div>
-                  <p className="font-medium text-gray-800">Michael T.</p>
-                  <p className="text-sm text-gray-500">Verified Buyer</p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="bg-gray-50 p-6 rounded-lg">
-              <div className="flex text-yellow-400 mb-3">
-                <IonIcon icon={star} />
-                <IonIcon icon={star} />
-                <IonIcon icon={star} />
-                <IonIcon icon={star} />
-                <IonIcon icon={starOutline} />
-              </div>
-              <p className="text-gray-600 italic mb-4">"The gift set was perfect for my wife's birthday. Beautifully packaged and the fragrances are high quality. Will definitely shop here again."</p>
-              <div className="flex items-center">
-                <div className="w-10 h-10 bg-gray-300 rounded-full mr-3"></div>
-                <div>
-                  <p className="font-medium text-gray-800">David R.</p>
-                  <p className="text-sm text-gray-500">Verified Buyer</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      {/* Newsletter */}
-      <div className="bg-[#fff5f6] py-12 px-4">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-3">Join Our Fragrance Club</h2>
-          <p className="text-gray-600 mb-6">Sign up for exclusive offers, new releases, and personalized fragrance recommendations.</p>
-          
-          <div className="flex flex-col md:flex-row gap-2 justify-center">
-            <input 
-              type="email" 
-              placeholder="Your email address" 
-              className="px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#fa929d] md:w-64 lg:w-80"
-            />
-            <button className="px-6 py-3 bg-[#fa929d] text-white rounded-lg hover:bg-[#e87e89] transition-colors duration-300 font-medium">
-              Subscribe
-            </button>
-          </div>
-        </div>
-      </div>
 
-      {/* Footer */}
       <Footer />
     </div>
   );

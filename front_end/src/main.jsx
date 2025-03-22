@@ -25,6 +25,7 @@ import ProtectedRoute from "./Admin/ProtectedRoute.jsx";
 import CartPage from './components/Cart/CartPage.jsx';
 import CheckoutPage from './components/Cart/CheckoutPage.jsx';
 import UserProfile from './components/UserProfile/UserProfile.jsx';
+import JazzCashForm from './components/UserProfile/JazzCashForm.jsx';
 import UserDetail from './Admin/UserDetailsPage.jsx';
 import  OrdersDetail from './Admin/OrdersDetails.jsx'
 import BlogPage from './components/Blog/BlogPage.jsx';
@@ -76,6 +77,7 @@ const router = createBrowserRouter([
       { path: '/UserDetail', element: <UserDetail/> },
       { path: '/OrdersDetail', element: <OrdersDetail/> },
       { path: '/HairCare', element: <HairCare/> },
+      { path: '/JazzCashForm', element: <JazzCashForm /> },
     ],
   },
 ]);
